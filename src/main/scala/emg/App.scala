@@ -1,15 +1,20 @@
 package emg
 
-/**
- * @author ${user.name}
- */
+import scala.collection.mutable
+import java.io.File
+
 object App {
-  
-  def foo(x : Array[String]) = x.foldLeft("")((a,b) => a + b)
-  
+
   def main(args : Array[String]) {
-    println( "Hello World!" )
-    println("concat arguments = " + foo(args))
+    PortDiscoverer.listPorts
+    val comm: TwoWaySerialComm = new TwoWaySerialComm
+    comm.connect("/dev/ttyS82")
+    Thread.sleep(10000)
+//    comm.reader.values.reverse.foreach((a: mutable.MutableList[Int]) => println(a.map((x: Int) => x.toChar).reverse.mkString("")))
+//    println(comm.reader.chars)
+    comm.port.close()
+    comm.reader.writeValuesToFile(new File("/home/ajprax/vutts"))
+    println(SerialReader.counter)
   }
 
 }
