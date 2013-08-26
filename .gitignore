@@ -1,0 +1,6 @@
+# Dart
+packages/
+
+# Python
+*.pyc
+*.pyo
