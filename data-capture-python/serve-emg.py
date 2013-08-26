@@ -1,44 +1,77 @@
 #!/usr/bin/env python
 
-# from wsgiref.simple_server import make_server
-# from ws4py.websocket import EchoWebSocket
-# from ws4py.server.wsgirefserver import WSGIServer, WebSocketWSGIRequestHandler
-# from ws4py.server.wsgiutils import WebSocketWSGIApplication
+from __future__ import print_function
 
-# server = make_server(
-#     host='',
-#     port=9000,
-#     server_class=WSGIServer,
-#     handler_class=WebSocketWSGIRequestHandler,
-#     app=WebSocketWSGIApplication(handler_cls=EchoWebSocket))
-# server.initialize_websockets_manager()
-# server.serve_forever()
+from gevent import monkey; monkey.patch_all()
+from gevent.queue import Queue
+import gevent
 
-import cherrypy
-from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
-from ws4py.websocket import EchoWebSocket
+from ws4py.server.geventserver import WebSocketServer
+from ws4py.websocket import WebSocket
 
-cherrypy.config.update({'server.socket_port': 9000})
-WebSocketPlugin(cherrypy.engine).subscribe()
-cherrypy.tools.websocket = WebSocketTool()
-
-class Root(object):
-  @cherrypy.expose
-  def index(self):
-    return 'some HTML with a websocket javascript connection'
-
-  @cherrypy.expose
-  def ws(self):
-    # handler = cherrypy.request.ws_handler
-    pass
+import serial
 
 
-cherrypy.quickstart(
-    Root(),
-    '/',
-    config={
-        '/ws': {
-            'tools.websocket.on': True,
-            'tools.websocket.handler_cls': EchoWebSocket
-        }
-    })
+# Buffer containing unsent ADC values.
+signal = Queue()
+
+# List of opened websocket connections.
+connections = []
+
+
+class EmgWebSocket(WebSocket):
+  def received_message(self, message):
+    print('Received message: %r' % message)
+
+  def opened(self):
+    # Register this connection.
+    connections.append(self)
+    print('Websocket %r opened!' % self)
+
+  def closed(self, code, reason=None):
+    if self in connections:
+      connections.remove(self)
+    print('Websocket %r closed!' % self)
+
+
+def serve(websocket_class, address=('0.0.0.0', 9001)):
+  print('Starting websocket server...')
+  server = WebSocketServer(address, websocket_class=websocket_class)
+  server.serve_forever()
+
+
+def receive():
+  print('Starting receiver...')
+  serial_port = serial.Serial('/dev/ttyACM0', 115200)
+  while True:
+    try:
+      value = int(serial_port.readline())
+      signal.put(value)
+    except ValueError:
+      print('invalid serial read value!')
+
+    gevent.sleep(0)
+
+
+def sender():
+  print('Starting sender...')
+  while True:
+    # Spin while the signal queue is empty.
+    while signal.empty():
+      # Yield to other greenlets while waiting.
+      gevent.sleep(0)
+
+    # Send the head of the queue over the websocket connection.
+    value = signal.get()
+    for connection in connections:
+      connection.send(str(value))
+
+    gevent.sleep(0)
+
+
+if __name__ == '__main__':
+  gevent.joinall([
+      gevent.spawn(serve, EmgWebSocket),
+      gevent.spawn(receive),
+      gevent.spawn(sender)
+  ])
