@@ -11,6 +11,8 @@ from ws4py.websocket import WebSocket
 
 import serial
 
+import time
+
 
 # Buffer containing unsent ADC values.
 signal = Queue()
@@ -42,11 +44,13 @@ def serve(websocket_class, address=('0.0.0.0', 9001)):
 
 def receive():
   print('Starting receiver...')
-  serial_port = serial.Serial('/dev/ttyACM0', 115200)
+  # serial_port = serial.Serial('/dev/ttyACM0', 115200)
   while True:
     try:
-      value = int(serial_port.readline())
-      signal.put(value)
+      value = 10
+      # value = int(serial_port.readline())
+      ts = time.time()
+      signal.put((ts, value))
     except ValueError:
       print('invalid serial read value!')
 
@@ -64,7 +68,7 @@ def sender():
     # Send the head of the queue over the websocket connection.
     value = signal.get()
     for connection in connections:
-      connection.send(str(value))
+      connection.send("%.20f,%d" % value)
 
     gevent.sleep(0)
 

@@ -36,12 +36,15 @@ void main() {
   });
   
   void receiveHandler(MessageEvent e) {
+    var nums = e.data.toString().split(",");
+    var ts = nums[0];
+    var value = nums[1];
     rcd++;
     if (rcd > 100) recData.removeAt(0);
-    recData.add(int.parse(e.data));
+    recData.add(int.parse(value));
   }
   
-  var webSocket = new WebSocket('ws://192.168.1.119:9001/');
+  var webSocket = new WebSocket('ws://0.0.0.0:9001/');
   webSocket.onMessage.listen(receiveHandler);
 
   void callback(Timer) {
