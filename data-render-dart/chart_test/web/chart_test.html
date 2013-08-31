@@ -9,6 +9,8 @@
     <script src="packages/browser/dart.js"></script>
   </head>
   <body>
-    Hello
+    Greetings:
+    <input type="text" bind-value="socketAdr" placeholder="Enter Websocket Address">
+    <button on-click="connect()" id="connectButton">Connect</button>
   </body>
 </html>

@@ -3,8 +3,13 @@ library chart;
 import 'dart:html';
 import 'dart:async';
 import 'package:chart/chart.dart';
+import 'package:web_ui/web_ui.dart';
+
+@observable String socketAdr='';
+ButtonElement connectButton;
 
 void main() {
+  connectButton = query("#connectButton");
   int rcd = 0;
   List recData = [0,0];
   var recLabels = ["0","0"];
@@ -43,7 +48,7 @@ void main() {
     if (rcd > 100) recData.removeAt(0);
     recData.add(int.parse(value));
   }
-  
+
   var webSocket = new WebSocket('ws://0.0.0.0:9001/');
   webSocket.onMessage.listen(receiveHandler);
 
@@ -81,7 +86,5 @@ void main() {
     document.body.children.add(txt1);
     var timer = new Timer.periodic(const Duration(milliseconds: 40), callback);
   }
-  
-  webSocket.onOpen.listen(openHandler);
-}
 
+}

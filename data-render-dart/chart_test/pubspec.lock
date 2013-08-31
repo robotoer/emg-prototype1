@@ -9,6 +9,10 @@ packages:
     description: args
     source: hosted
     version: "0.6.19"
+  barback:
+    description: barback
+    source: hosted
+    version: "0.6.19"
   browser:
     description: browser
     source: hosted
@@ -17,6 +21,18 @@ packages:
     description: chart
     source: hosted
     version: "0.3.1"
+  csslib:
+    description: csslib
+    source: hosted
+    version: "0.4.7+11"
+  custom_element:
+    description: custom_element
+    source: hosted
+    version: "0.6.19"
+  html5lib:
+    description: html5lib
+    source: hosted
+    version: "0.4.4"
   intl:
     description: intl
     source: hosted
@@ -25,11 +41,51 @@ packages:
     description: logging
     source: hosted
     version: "0.6.19"
+  mdv:
+    description: mdv
+    source: hosted
+    version: "0.6.19"
+  meta:
+    description: meta
+    source: hosted
+    version: "0.6.19"
+  mutation_observer:
+    description: mutation_observer
+    source: hosted
+    version: "0.6.19"
+  observe:
+    description: observe
+    source: hosted
+    version: "0.6.19"
   path:
     description: path
+    source: hosted
+    version: "0.6.19"
+  pathos:
+    description: pathos
+    source: hosted
+    version: "0.6.3+1"
+  serialization:
+    description: serialization
+    source: hosted
+    version: "0.6.19"
+  source_maps:
+    description: source_maps
+    source: hosted
+    version: "0.6.19"
+  stack_trace:
+    description: stack_trace
+    source: hosted
+    version: "0.6.19"
+  unittest:
+    description: unittest
     source: hosted
     version: "0.6.19"
   unmodifiable_collection:
     description: unmodifiable_collection
     source: hosted
     version: "0.6.19"
+  web_ui:
+    description: web_ui
+    source: hosted
+    version: "0.4.18+2"
