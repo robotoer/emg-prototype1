@@ -10,7 +10,7 @@ import 'dart:collection';
 ButtonElement connectButton;
 
 var recData = new Queue<int>();
-var recLabels = ["0","0"];
+var recLabels;
 var webSocket;
 DivElement container = new DivElement();
 var timer;
@@ -33,6 +33,7 @@ void doNothing(num) {
 }
 
 void openHandler(Event e) {
+  print("socket opened.");
   var txt1 = new ParagraphElement();
   txt1.text = 'opened, yo';
   document.body.children.add(txt1);
@@ -72,7 +73,6 @@ void main() {
     'titleText' : 'emg real time data'
     });
   chart.show(container);
-  
 }
 
 void connect(){ 

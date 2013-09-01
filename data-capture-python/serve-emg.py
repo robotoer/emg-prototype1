@@ -17,6 +17,8 @@ import random
 
 # Buffer containing unsent ADC values.
 signal = Queue()
+# Copy of the signal queue for use by kiji_sender.
+kiji_signal = Queue()
 
 # List of opened websocket connections.
 connections = []
@@ -43,8 +45,8 @@ def serve(websocket_class, address=('0.0.0.0', 9001)):
   server.serve_forever()
 
 
-def receive():
-  print('Starting receiver...')
+def serial_receive():
+  print('Starting serial receiver...')
   # serial_port = serial.Serial('/dev/ttyACM0', 115200)
   while True:
     try:
@@ -54,31 +56,62 @@ def receive():
       if signal.qsize() >= 4096:
         signal.get()
       signal.put((ts, value))
+      kiji_signal.put((ts, value))
     except ValueError:
       print('invalid serial read value!')
 
-    gevent.sleep(0.01)
+    gevent.sleep(0.00001)
 
 
-def sender():
-  print('Starting sender...')
+def dart_sender():
+  print('Starting dart sender...')
   while True:
-    # Spin while the signal queue is empty.
-    while signal.empty():
-      # Yield to other greenlets while waiting.
-      gevent.sleep(0)
+    buffered_signal = []
+    while len(buffered_signal) < 100:
+      # Spin while the signal queue is empty.
+      while signal.empty():
+        # Yield to other greenlets while waiting.
+        gevent.sleep(0)
 
-    # Send the head of the queue over the websocket connection.
-    value = signal.get()
+      # Save the head of the queue in the local buffer.
+      buffered_signal.append(signal.get())
+
+    # Average the timestamps and values over the last 100 signals.
+    out_time = 0.0
+    out_value = 0
+    out_string = ""
+    for v in buffered_signal:
+      out_time += v[0]
+      out_value += v[1]
+    out_string = "%.20f,%d" % (out_time / 100, out_value / 100)
+
+    # Send the averaged values to each connected websocket.
     for connection in connections:
-      connection.send("%.20f,%d" % value)
+      connection.send(out_string)
 
     gevent.sleep(0)
+
+
+def kiji_sender():
+  print('Starting kiji sender...')
+  while True:
+    buffered_signal = []
+    while len(buffered_signal) < 115200:
+      # Spin while the signal queue is empty.
+      while kiji_signal.empty():
+        # Yield to other greenlets while waiting.
+        gevent.sleep(0)
+
+      # Save t he head of the queue in the local buffer.
+      buffered_signal.append(kiji_signal.get())
+
+    # Make a call to KijiREST to store these values.
 
 
 if __name__ == '__main__':
   gevent.joinall([
       gevent.spawn(serve, EmgWebSocket),
-      gevent.spawn(receive),
-      gevent.spawn(sender)
+      gevent.spawn(serial_receive),
+      gevent.spawn(dart_sender),
+      gevent.spawn(kiji_sender)
   ])
