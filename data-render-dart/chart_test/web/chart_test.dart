@@ -15,6 +15,7 @@ List recData = [0,0];
 var recLabels = ["0","0"];
 var webSocket;
 DivElement container = new DivElement();
+var timer;
 var chart = new Line({
   'labels' : ["1","2","3","4"],
   'datasets' : [{
@@ -66,7 +67,7 @@ void callback(Timer) {
     'scaleStepValue' : null, 
     'bezierCurve' : false, 
     'animation' : false,
-    'titleText' : 'emg real time chart test'
+    'titleText' : 'emg real time data'
     }
     );
     chart.show(container);
@@ -76,7 +77,11 @@ void openHandler(Event e) {
   var txt1 = new ParagraphElement();
   txt1.text = 'opened, yo';
   document.body.children.add(txt1);
-  var timer = new Timer.periodic(const Duration(milliseconds: 40), callback);
+  timer = new Timer.periodic(const Duration(milliseconds: 40), callback);
+}
+
+void closeHandler(Event e) {
+  timer.cancel();
 }
 
 void main() {
@@ -90,4 +95,5 @@ void connect(){
   webSocket = new WebSocket(socketAdr);
   webSocket.onOpen.listen(openHandler);
   webSocket.onMessage.listen(receiveHandler);
+  webSocket.onClose.listen(closeHandler);
 }
