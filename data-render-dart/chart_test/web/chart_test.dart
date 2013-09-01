@@ -4,52 +4,54 @@ import 'dart:html';
 import 'dart:async';
 import 'package:chart/chart.dart';
 import 'package:web_ui/web_ui.dart';
+import 'dart:collection';
 
 @observable String socketAdr='';
 ButtonElement connectButton;
 
-//ws://192.168.1.104:9001/
-
-int rcd = 0;
-List recData = [0,0];
+var recData = new Queue<int>();
 var recLabels = ["0","0"];
 var webSocket;
 DivElement container = new DivElement();
 var timer;
-var chart = new Line({
-  'labels' : ["1","2","3","4"],
-  'datasets' : [{
-    'fillColor' : "rgba(220,220,220,0.5)",
-    'strokeColor' : "rgba(0,0,0,1)",
-    'pointColor' : "rgba(220,220,220,1)",
-    'pointStrokeColor' : "#fff",
-    'pointDot' : false,
-    'data' : [500,500,500,500]
-  }]
-}, 
-{
-  'scaleOverride' : true, 
-  'scaleMinValue' : -4095.0, 
-  'scaleMaxValue' : 4095.0, 
-  'scaleStepValue' : null, 
-  'bezierCurve' : true, 
-  'animation' : false,
-  'titleText' : 'you shouldnt be seing this'
-});
-
+var chart;
 
 void receiveHandler(MessageEvent e) {
-  var nums = e.data.toString().split(",");
-  var ts = nums[0];
-  var value = nums[1];
-  rcd++;
-  if (rcd > 100) recData.removeAt(0);
-  recData.add(int.parse(value));
+  if (recData.length == 100) {
+    recData.removeFirst();
+  }
+  recData.add(int.parse(e.data.toString().split(",")[1]));
 }
 
 void callback(Timer) {
+  chart.data['datasets'][0]['data'] = recData.toList();
+  chart.animateFrame();
+}
+ 
+void doNothing(num) {
+  
+}
+
+void openHandler(Event e) {
+  var txt1 = new ParagraphElement();
+  txt1.text = 'opened, yo';
+  document.body.children.add(txt1);
+  timer = new Timer.periodic(const Duration(milliseconds: 1), callback);
+}
+
+void closeHandler(Event e) {
+  timer.cancel();
+}
+
+void main() {
+  for (int x = 0; x < 100; x++) {
+    recData.add(0); 
+  }
   recLabels = new List.from(recData.map((j) {return j.toString();}));
-  chart.hide();
+  connectButton = query("#connectButton");
+  container.style.height ='400px';
+  container.style.width =  '100%';
+  document.body.children.add(container);
   chart = new Line({
     'labels' : recLabels,
     'datasets' : [{
@@ -58,7 +60,7 @@ void callback(Timer) {
       'pointColor' : "rgba(220,220,220,1)",
       'pointStrokeColor' : "#fff",
       'pointDot' : false,
-      'data' : recData
+      'data' : recData.toList()
     }]
   }, {
     'scaleOverride' : true,
@@ -68,27 +70,9 @@ void callback(Timer) {
     'bezierCurve' : false, 
     'animation' : false,
     'titleText' : 'emg real time data'
-    }
-    );
-    chart.show(container);
-}
- 
-void openHandler(Event e) {
-  var txt1 = new ParagraphElement();
-  txt1.text = 'opened, yo';
-  document.body.children.add(txt1);
-  timer = new Timer.periodic(const Duration(milliseconds: 40), callback);
-}
-
-void closeHandler(Event e) {
-  timer.cancel();
-}
-
-void main() {
-  connectButton = query("#connectButton");
-  container.style.height ='400px';
-  container.style.width =  '100%';
-  document.body.children.add(container);
+    });
+  chart.show(container);
+  
 }
 
 void connect(){ 

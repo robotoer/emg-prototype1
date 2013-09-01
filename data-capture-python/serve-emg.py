@@ -12,6 +12,7 @@ from ws4py.websocket import WebSocket
 import serial
 
 import time
+import random
 
 
 # Buffer containing unsent ADC values.
@@ -47,14 +48,16 @@ def receive():
   # serial_port = serial.Serial('/dev/ttyACM0', 115200)
   while True:
     try:
-      value = 10
+      value = random.randrange(0, 4095)
       # value = int(serial_port.readline())
       ts = time.time()
+      if signal.qsize() >= 4096:
+        signal.get()
       signal.put((ts, value))
     except ValueError:
       print('invalid serial read value!')
 
-    gevent.sleep(0)
+    gevent.sleep(0.01)
 
 
 def sender():
