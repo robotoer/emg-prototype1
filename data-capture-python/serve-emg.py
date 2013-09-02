@@ -76,14 +76,12 @@ def dart_sender():
       # Save the head of the queue in the local buffer.
       buffered_signal.append(signal.get())
 
-    # Average the timestamps and values over the last 100 signals.
-    out_time = 0.0
-    out_value = 0
     out_string = ""
     for v in buffered_signal:
-      out_time += v[0]
-      out_value += v[1]
-    out_string = "%.20f,%d" % (out_time / 100, out_value / 100)
+      if out_string == "":
+        out_string = "%.20f,%d" % v
+      else:
+        out_string = "%s|%.20f,%d" % (out_string, v[0], v[1])
 
     # Send the averaged values to each connected websocket.
     for connection in connections:
@@ -92,26 +90,25 @@ def dart_sender():
     gevent.sleep(0)
 
 
-def kiji_sender():
-  print('Starting kiji sender...')
-  while True:
-    buffered_signal = []
-    while len(buffered_signal) < 115200:
-      # Spin while the signal queue is empty.
-      while kiji_signal.empty():
-        # Yield to other greenlets while waiting.
-        gevent.sleep(0)
+# def kiji_sender():
+#   print('Starting kiji sender...')
+#   while True:
+#     buffered_signal = []
+#     while len(buffered_signal) < 115200:
+#       # Spin while the signal queue is empty.
+#       while kiji_signal.empty():
+#         # Yield to other greenlets while waiting.
+#         gevent.sleep(0)
 
-      # Save t he head of the queue in the local buffer.
-      buffered_signal.append(kiji_signal.get())
+#       # Save t he head of the queue in the local buffer.
+#       buffered_signal.append(kiji_signal.get())
 
-    # Make a call to KijiREST to store these values.
+#     # Make a call to KijiREST to store these values.
 
 
 if __name__ == '__main__':
   gevent.joinall([
       gevent.spawn(serve, EmgWebSocket),
       gevent.spawn(serial_receive),
-      gevent.spawn(dart_sender),
-      gevent.spawn(kiji_sender)
+      gevent.spawn(dart_sender)
   ])
