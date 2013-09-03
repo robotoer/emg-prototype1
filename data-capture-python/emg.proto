@@ -1,0 +1,15 @@
+package emg;
+
+message Chunk {
+
+  message Reading {
+    optional double timestamp = 1;
+    optional int32 value = 2;
+  }
+
+  optional string subject_name = 1;
+  optional string experiment_name = 2;
+  repeated Reading readings = 3;
+
+}
+

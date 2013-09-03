@@ -17,6 +17,7 @@ var timer;
 var chart;
 
 void receiveHandler(MessageEvent e) {
+  print(e.data.toString());
   if (recData.length >= 100) {
     recData.removeFirst();
   }

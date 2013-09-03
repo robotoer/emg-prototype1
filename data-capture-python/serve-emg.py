@@ -10,15 +10,14 @@ from ws4py.server.geventserver import WebSocketServer
 from ws4py.websocket import WebSocket
 
 import serial
-
 import time
 import random
+
+import emg_pb2
 
 
 # Buffer containing unsent ADC values.
 signal = Queue()
-# Copy of the signal queue for use by kiji_sender.
-kiji_signal = Queue()
 
 # List of opened websocket connections.
 connections = []
@@ -56,7 +55,7 @@ def serial_receive():
       if signal.qsize() >= 4096:
         signal.get()
       signal.put((ts, value))
-      kiji_signal.put((ts, value))
+      # kiji_signal.put((ts, value))
     except ValueError:
       print('invalid serial read value!')
 
@@ -66,44 +65,22 @@ def serial_receive():
 def dart_sender():
   print('Starting dart sender...')
   while True:
-    buffered_signal = []
-    while len(buffered_signal) < 100:
+    chunk = emg_pb2.Chunk()
+    while len(chunk.readings) <= 100:
       # Spin while the signal queue is empty.
       while signal.empty():
         # Yield to other greenlets while waiting.
         gevent.sleep(0)
 
-      # Save the head of the queue in the local buffer.
-      buffered_signal.append(signal.get())
+      #Save the head of the queue into the chunk.
+      reading = chunk.readings.add()
+      (reading.timestamp, reading.value) = signal.get()
 
-    out_string = ""
-    for v in buffered_signal:
-      if out_string == "":
-        out_string = "%.20f,%d" % v
-      else:
-        out_string = "%s|%.20f,%d" % (out_string, v[0], v[1])
-
-    # Send the averaged values to each connected websocket.
     for connection in connections:
-      connection.send(out_string)
+      # TODO switch to chunk.SerializeToString() when dart/scala can handle that as input.
+      connection.send(str(chunk))
 
     gevent.sleep(0)
-
-
-# def kiji_sender():
-#   print('Starting kiji sender...')
-#   while True:
-#     buffered_signal = []
-#     while len(buffered_signal) < 115200:
-#       # Spin while the signal queue is empty.
-#       while kiji_signal.empty():
-#         # Yield to other greenlets while waiting.
-#         gevent.sleep(0)
-
-#       # Save t he head of the queue in the local buffer.
-#       buffered_signal.append(kiji_signal.get())
-
-#     # Make a call to KijiREST to store these values.
 
 
 if __name__ == '__main__':
