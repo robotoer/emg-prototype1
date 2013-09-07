@@ -4,3 +4,6 @@ dependencies:
   browser: any
   chart: any
   web_ui: any
+  protobuf:
+    git: https://github.com/dart-lang/dart-protobuf.git
+    version: '>=0.1.0'
