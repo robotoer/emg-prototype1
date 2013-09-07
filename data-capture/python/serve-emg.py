@@ -12,6 +12,7 @@ from ws4py.websocket import WebSocket
 import serial
 import time
 import random
+import base64
 
 import emg_pb2
 
@@ -23,9 +24,32 @@ signal = Queue()
 connections = []
 
 
+def record_reading_chunk(record_duration):
+  start_time = time.time()
+  chunk = emg_pb2.ReadingChunk()
+  while (time.time() - start_time < record_duration):
+    while signal.empty():
+      gevent.sleep(0)
+
+    reading = chunk.readings.add()
+    (reading.timestamp, reading.value) = signal.get()
+
+  return chunk
+
+
 class EmgWebSocket(WebSocket):
   def received_message(self, message):
-    print('Received message: %r' % message)
+    decoded = base64.b64decode(message.data)
+    control_msg = emg_pb2.DartToPythonMessage()
+    control_msg.ParseFromString(decoded)
+    if (control_msg.message_type == "StartExperiment"):
+      inner_msg = msg.start
+      #TODO start the experiment
+    elif (control_msg.message_type == "FinishExperiment"):
+      inner_msg = msg.finish
+      #TODO finish the experiment
+    else:
+      #TODO Error
 
   def opened(self):
     # Register this connection.
@@ -52,13 +76,13 @@ def serial_receiver():
       value = random.randrange(0, 4095)
       # value = int(serial_port.readline())
       ts = time.time()
-      if signal.qsize() >= 4096:
+      if signal.qsize() >= 100:
         signal.get()
       signal.put((ts, value))
-      # kiji_signal.put((ts, value))
     except ValueError:
       print('invalid serial read value!')
 
+    #TODO this should be 0 when using the serial port.
     gevent.sleep(0.00001)
 
 

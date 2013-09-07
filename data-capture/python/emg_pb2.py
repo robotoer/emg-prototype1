@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='emg.proto',
   package='emg',
-  serialized_pb='\n\temg.proto\x12\x03\x65mg\"+\n\x07Reading\x12\x11\n\ttimestamp\x18\x01 \x01(\x01\x12\r\n\x05value\x18\x02 \x01(\x05\".\n\x0cReadingChunk\x12\x1e\n\x08readings\x18\x03 \x03(\x0b\x32\x0c.emg.Reading\"G\n\x0bGestureDesc\x12\x14\n\x0cgesture_name\x18\x01 \x01(\t\x12\r\n\x05\x66orce\x18\x02 \x01(\x01\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"\x85\x01\n\x0e\x45xperimentDesc\x12\x17\n\x0f\x65xperiment_name\x18\x01 \x01(\t\x12\x18\n\x10gesture_duration\x18\x02 \x01(\x05\x12\x1d\n\x15time_between_gestures\x18\x03 \x01(\x05\x12!\n\x07gesture\x18\x04 \x03(\x0b\x32\x10.emg.GestureDesc\"\x90\x01\n\x12\x45xperimentInstance\x12\x14\n\x0csubject_name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x05\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12(\n\rReadingChunks\x18\x04 \x03(\x0b\x32\x11.emg.ReadingChunk\"c\n\x0fStartExperiment\x12\x14\n\x0csubject_name\x18\x01 \x01(\t\x12\'\n\nexperiment\x18\x02 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12\x11\n\ttimestamp\x18\x03 \x01(\x05\"Q\n\x10\x46inishExperiment\x12\x14\n\x0csave_to_kiji\x18\x01 \x01(\x08\x12\x11\n\ttimestamp\x18\x02 \x01(\x05\x12\x14\n\x0csubject_name\x18\x03 \x01(\t')
+  serialized_pb='\n\temg.proto\x12\x03\x65mg\"+\n\x07Reading\x12\x11\n\ttimestamp\x18\x01 \x01(\x01\x12\r\n\x05value\x18\x02 \x01(\x05\".\n\x0cReadingChunk\x12\x1e\n\x08readings\x18\x03 \x03(\x0b\x32\x0c.emg.Reading\"G\n\x0bGestureDesc\x12\x14\n\x0cgesture_name\x18\x01 \x01(\t\x12\r\n\x05\x66orce\x18\x02 \x01(\x01\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"\x85\x01\n\x0e\x45xperimentDesc\x12\x17\n\x0f\x65xperiment_name\x18\x01 \x01(\t\x12\x18\n\x10gesture_duration\x18\x02 \x01(\x05\x12\x1d\n\x15time_between_gestures\x18\x03 \x01(\x05\x12!\n\x07gesture\x18\x04 \x03(\x0b\x32\x10.emg.GestureDesc\"\x90\x01\n\x12\x45xperimentInstance\x12\x14\n\x0csubject_name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x05\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12(\n\rReadingChunks\x18\x04 \x03(\x0b\x32\x11.emg.ReadingChunk\"c\n\x0fStartExperiment\x12\x14\n\x0csubject_name\x18\x01 \x01(\t\x12\'\n\nexperiment\x18\x02 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12\x11\n\ttimestamp\x18\x03 \x01(\x05\"Q\n\x10\x46inishExperiment\x12\x14\n\x0csave_to_kiji\x18\x01 \x01(\x08\x12\x11\n\ttimestamp\x18\x02 \x01(\x05\x12\x14\n\x0csubject_name\x18\x03 \x01(\t\"w\n\x13\x44\x61rtToPythonMessage\x12\x14\n\x0cmessage_type\x18\x01 \x02(\t\x12#\n\x05start\x18\x02 \x01(\x0b\x32\x14.emg.StartExperiment\x12%\n\x06\x66inish\x18\x03 \x01(\x0b\x32\x15.emg.FinishExperiment')
 
 
 
@@ -304,11 +304,55 @@ _FINISHEXPERIMENT = _descriptor.Descriptor(
   serialized_end=649,
 )
 
+
+_DARTTOPYTHONMESSAGE = _descriptor.Descriptor(
+  name='DartToPythonMessage',
+  full_name='emg.DartToPythonMessage',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='message_type', full_name='emg.DartToPythonMessage.message_type', index=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='start', full_name='emg.DartToPythonMessage.start', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='finish', full_name='emg.DartToPythonMessage.finish', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=651,
+  serialized_end=770,
+)
+
 _READINGCHUNK.fields_by_name['readings'].message_type = _READING
 _EXPERIMENTDESC.fields_by_name['gesture'].message_type = _GESTUREDESC
 _EXPERIMENTINSTANCE.fields_by_name['experiment'].message_type = _EXPERIMENTDESC
 _EXPERIMENTINSTANCE.fields_by_name['ReadingChunks'].message_type = _READINGCHUNK
 _STARTEXPERIMENT.fields_by_name['experiment'].message_type = _EXPERIMENTDESC
+_DARTTOPYTHONMESSAGE.fields_by_name['start'].message_type = _STARTEXPERIMENT
+_DARTTOPYTHONMESSAGE.fields_by_name['finish'].message_type = _FINISHEXPERIMENT
 DESCRIPTOR.message_types_by_name['Reading'] = _READING
 DESCRIPTOR.message_types_by_name['ReadingChunk'] = _READINGCHUNK
 DESCRIPTOR.message_types_by_name['GestureDesc'] = _GESTUREDESC
@@ -316,6 +360,7 @@ DESCRIPTOR.message_types_by_name['ExperimentDesc'] = _EXPERIMENTDESC
 DESCRIPTOR.message_types_by_name['ExperimentInstance'] = _EXPERIMENTINSTANCE
 DESCRIPTOR.message_types_by_name['StartExperiment'] = _STARTEXPERIMENT
 DESCRIPTOR.message_types_by_name['FinishExperiment'] = _FINISHEXPERIMENT
+DESCRIPTOR.message_types_by_name['DartToPythonMessage'] = _DARTTOPYTHONMESSAGE
 
 class Reading(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
@@ -358,6 +403,12 @@ class FinishExperiment(_message.Message):
   DESCRIPTOR = _FINISHEXPERIMENT
 
   # @@protoc_insertion_point(class_scope:emg.FinishExperiment)
+
+class DartToPythonMessage(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _DARTTOPYTHONMESSAGE
+
+  # @@protoc_insertion_point(class_scope:emg.DartToPythonMessage)
 
 
 # @@protoc_insertion_point(module_scope)

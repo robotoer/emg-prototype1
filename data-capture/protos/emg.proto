@@ -53,3 +53,11 @@ message FinishExperiment { // Written by Dart, read by Python.
   optional int32 timestamp = 2; // When the experiement began.
   optional string subject_name = 3; // Name of the subject of the experiment.
 }
+
+
+// Parent of control messages sent from Dart to Python.
+message DartToPythonMessage {
+  required string message_type = 1; // Required type of the inner message.
+  optional StartExperiment start = 2; // The value of the message if it is a StartExperiment.
+  optional FinishExperiment finish = 3; // The value of the message if it is a FinishExperiment.
+}
