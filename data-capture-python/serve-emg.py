@@ -63,9 +63,9 @@ def serial_receiver():
 
 
 def sender():
-  print('Starting dart sender...')
+  print('Starting sender...')
   while True:
-    chunk = emg_pb2.Chunk()
+    chunk = emg_pb2.ReadingChunk()
     while len(chunk.readings) <= 100:
       # Spin while the signal queue is empty.
       while signal.empty():
