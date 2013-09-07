@@ -1,20 +1,13 @@
 package emg
 
-import scala.collection.mutable
-import java.io.File
+import emg.websocket.WebSocketClient
+import io.backchat.hookup.HookupClientConfig
+import java.net.URI
 
 object App {
 
   def main(args : Array[String]) {
-    PortDiscoverer.listPorts
-    val comm: TwoWaySerialComm = new TwoWaySerialComm
-    comm.connect("/dev/ttyS82")
+    val wsClient = new WebSocketClient(new HookupClientConfig(uri = URI.create("ws://0.0.0.0:9001/")))
     Thread.sleep(10000)
-//    comm.reader.values.reverse.foreach((a: mutable.MutableList[Int]) => println(a.map((x: Int) => x.toChar).reverse.mkString("")))
-//    println(comm.reader.chars)
-    comm.port.close()
-    comm.reader.writeValuesToFile(new File("/home/ajprax/vutts"))
-    println(SerialReader.counter)
   }
-
 }

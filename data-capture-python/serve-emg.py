@@ -38,13 +38,13 @@ class EmgWebSocket(WebSocket):
     print('Websocket %r closed!' % self)
 
 
-def serve(websocket_class, address=('0.0.0.0', 9001)):
+def server(websocket_class, address=('0.0.0.0', 9001)):
   print('Starting websocket server...')
   server = WebSocketServer(address, websocket_class=websocket_class)
   server.serve_forever()
 
 
-def serial_receive():
+def serial_receiver():
   print('Starting serial receiver...')
   # serial_port = serial.Serial('/dev/ttyACM0', 115200)
   while True:
@@ -62,7 +62,7 @@ def serial_receive():
     gevent.sleep(0.00001)
 
 
-def dart_sender():
+def sender():
   print('Starting dart sender...')
   while True:
     chunk = emg_pb2.Chunk()
@@ -85,7 +85,7 @@ def dart_sender():
 
 if __name__ == '__main__':
   gevent.joinall([
-      gevent.spawn(serve, EmgWebSocket),
-      gevent.spawn(serial_receive),
-      gevent.spawn(dart_sender)
+      gevent.spawn(server, EmgWebSocket),
+      gevent.spawn(serial_receiver),
+      gevent.spawn(sender)
   ])
