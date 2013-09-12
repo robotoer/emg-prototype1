@@ -3,7 +3,5 @@ description: A sample web application
 dependencies:
   browser: any
   chart: any
+  protobuf: '>=0.1.0'
   web_ui: any
-  protobuf:
-    git: https://github.com/dart-lang/dart-protobuf.git
-    version: '>=0.1.0'

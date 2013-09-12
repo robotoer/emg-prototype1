@@ -24,7 +24,7 @@ packages:
   crypto:
     description: crypto
     source: hosted
-    version: "0.7.1"
+    version: "0.6.19"
   csslib:
     description: csslib
     source: hosted
@@ -70,11 +70,8 @@ packages:
     source: hosted
     version: "0.6.3+1"
   protobuf:
-    description:
-      ref: null
-      resolved-ref: "276c06ba054f169da35d001ebf0623bb41674aa1"
-      url: "https://github.com/dart-lang/dart-protobuf.git"
-    source: git
+    description: protobuf
+    source: hosted
     version: "0.1.0"
   serialization:
     description: serialization

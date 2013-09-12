@@ -10,7 +10,19 @@
   </head>
   <body>
     Connect to EMG: <br><br>
-    <input type="text" bind-value="socketAdr" placeholder="Enter Websocket Address"/>
-    <button on-click="connect()" id="connectButton">Connect</button>
+    <input id = "one" type="text" bind-value="socketAdr" placeholder="Enter Websocket Address" /><br><br>
+    <button id = "one" on-click="connect()" id="connectButton" >Connect</button><br><br>
+    
+    <input id = "two" type="text" bind-value="subjectName" placeholder="Enter Subject Name" /><br><br>
+    
+    <input id = "two" type="text" bind-value="experimentName" placeholder="Enter Experiment Name" /><br>
+    <input id = "two" type="text" bind-value="gestureDuration" placeholder="Enter Gesture Duration" /><br>
+    <input id = "two" type="text" bind-value="timeBetweenGestures" placeholder="Enter Time Between Gestures" /><br><br>
+    
+    <input id = "two" type="text" bind-value="gestureName" placeholder="Enter Gesture Name" /><br>
+    <input id = "two" type="text" bind-value="force" placeholder="Enter Gesture Force" /><br>
+    <input id = "two" type="text" bind-value="description" placeholder="Enter Gesture Description" /><br><br>
+    
+    <button id = "two" on-click="startExperiment()" id="startExperimentButton" >Start Experiment</button><br><br>
   </body>
 </html>

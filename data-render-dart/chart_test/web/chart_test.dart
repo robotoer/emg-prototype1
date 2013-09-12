@@ -5,9 +5,19 @@ import 'dart:async';
 import 'package:chart/chart.dart';
 import 'package:web_ui/web_ui.dart';
 import 'dart:collection';
+import 'emg.pb.dart';
 
 @observable String socketAdr='';
+@observable String subjectName='';
+@observable String experimentName='';
+@observable String gestureDuration='';
+@observable String timeBetweenGestures='';
+@observable String gestureName='';
+@observable String force='';
+@observable String description='';
+
 ButtonElement connectButton;
+ButtonElement startExperimentButton;
 
 var recData = new Queue<int>();
 var recLabels;
@@ -15,9 +25,10 @@ var webSocket;
 DivElement container = new DivElement();
 var timer;
 var chart;
+var phaseTwos = queryAll("#two"); // DOM elements to be enabled upon webSocket connect
 
 void receiveHandler(MessageEvent e) {
-  print(e.data.toString());
+  //print(e.data.toString());
   if (recData.length >= 100) {
     recData.removeFirst();
   }
@@ -35,11 +46,9 @@ void callback(Timer) {
 }
 
 void openHandler(Event e) {
-  print("socket opened.");
-  var txt1 = new ParagraphElement();
-  txt1.text = 'opened, yo';
-  document.body.children.add(txt1);
+  //print("socket opened.");
   timer = new Timer.periodic(const Duration(milliseconds: 1), callback);
+  phaseTwos.forEach((j) {j.attributes.remove('disabled');});
 }
 
 void closeHandler(Event e) {
@@ -75,6 +84,7 @@ void main() {
     'titleText' : 'emg real time data'
     });
   chart.show(container);
+  phaseTwos.forEach((j) {j.attributes['disabled'] = 'true';});
 }
 
 void connect() {
@@ -82,4 +92,21 @@ void connect() {
   webSocket.onOpen.listen(openHandler);
   webSocket.onMessage.listen(receiveHandler);
   webSocket.onClose.listen(closeHandler);
+}
+
+void startExperiment() {
+  // totally untested function
+  StartExperiment startMsg = new StartExperiment();
+  startMsg.subjectName = subjectName;
+  startMsg.timestamp = new DateTime.now().millisecondsSinceEpoch;
+  startMsg.experiment = new ExperimentDesc();
+  startMsg.experiment.experimentName = experimentName;
+  startMsg.experiment.gestureDuration = int.parse(gestureDuration);
+  startMsg.experiment.timeBetweenGestures = int.parse(timeBetweenGestures);
+  GestureDesc gDesc = new GestureDesc();
+  gDesc.gestureName = gestureName;
+  gDesc.force = double.parse(force);
+  gDesc.description = description;
+  startMsg.experiment.gesture.add(gDesc);
+  webSocket.sendByteBuffer(startMsg.writeToBuffer()); // complete guess
 }
