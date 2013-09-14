@@ -3,7 +3,8 @@ package emg;
 // A single emg value and the time at which it was recorded.
 message Reading { // Written by Python, read by Scala.
   optional double timestamp = 1; // Time at which the reading occurred.
-  optional int32 value = 2; // Recorded value.
+  optional int32 emg_value = 2; // Recorded emg value.
+  optional int32 force_value = 3; // Recorded force value.
 }
 
 
@@ -26,14 +27,14 @@ message ExperimentDesc { // Written by Dart, read by Python/Scala.
   optional string experiment_name = 1; // Name of the experiment.
   optional int32 gesture_duration = 2; // Duration of each gesture.
   optional int32 time_between_gestures = 3; // Time to wait between gestures.
-  repeated GestureDesc gesture = 4; // List of gestures in the experiment.
+  repeated GestureDesc gestures = 4; // List of gestures in the experiment.
 }
 
 
 // An instance of an experiment.
 message ExperimentInstance { // Written by Python, read by Scala.
-  optional string subject_name = 1; // Name of the subject of the experiment.
-  optional int32 timestamp = 2; // When the experiment began.
+  optional int32 timestamp = 1; // When the experiment began.
+  optional string subject_name = 2; // Name of the subject of the experiment.
   optional ExperimentDesc experiment = 3; // Description of the experiment.
   repeated ReadingChunk ReadingChunks = 4; // Readings corresponding to Gestures in the experiement.
 }
@@ -41,17 +42,17 @@ message ExperimentInstance { // Written by Python, read by Scala.
 
 // Control message instructing Python to perform recordings for an experiment.
 message StartExperiment { // Written by Dart, read by Python.
-  optional string subject_name = 1; // Name of the subject of the experiment.
-  optional ExperimentDesc experiment = 2; // Description of the experiment.
-  optional int32 timestamp = 3; // When the experiment began.
+  optional int32 timestamp = 1; // When the experiment began.
+  optional string subject_name = 2; // Name of the subject of the experiment.
+  optional ExperimentDesc experiment = 3; // Description of the experiment.
 }
 
 
 // Control message instructing Python to save or discard a completed experiment.
 message FinishExperiment { // Written by Dart, read by Python.
-  optional bool save_to_kiji = 1; // Whether to save the experiment to kiji.
-  optional int32 timestamp = 2; // When the experiement began.
-  optional string subject_name = 3; // Name of the subject of the experiment.
+  optional int32 timestamp = 1; // When the experiement began.
+  optional string subject_name = 2; // Name of the subject of the experiment.
+  optional bool save_to_kiji = 3; // Whether to save the experiment to kiji.
 }
 
 

@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='emg.proto',
   package='emg',
-  serialized_pb='\n\temg.proto\x12\x03\x65mg\"+\n\x07Reading\x12\x11\n\ttimestamp\x18\x01 \x01(\x01\x12\r\n\x05value\x18\x02 \x01(\x05\".\n\x0cReadingChunk\x12\x1e\n\x08readings\x18\x03 \x03(\x0b\x32\x0c.emg.Reading\"G\n\x0bGestureDesc\x12\x14\n\x0cgesture_name\x18\x01 \x01(\t\x12\r\n\x05\x66orce\x18\x02 \x01(\x01\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"\x85\x01\n\x0e\x45xperimentDesc\x12\x17\n\x0f\x65xperiment_name\x18\x01 \x01(\t\x12\x18\n\x10gesture_duration\x18\x02 \x01(\x05\x12\x1d\n\x15time_between_gestures\x18\x03 \x01(\x05\x12!\n\x07gesture\x18\x04 \x03(\x0b\x32\x10.emg.GestureDesc\"\x90\x01\n\x12\x45xperimentInstance\x12\x14\n\x0csubject_name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x05\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12(\n\rReadingChunks\x18\x04 \x03(\x0b\x32\x11.emg.ReadingChunk\"c\n\x0fStartExperiment\x12\x14\n\x0csubject_name\x18\x01 \x01(\t\x12\'\n\nexperiment\x18\x02 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12\x11\n\ttimestamp\x18\x03 \x01(\x05\"Q\n\x10\x46inishExperiment\x12\x14\n\x0csave_to_kiji\x18\x01 \x01(\x08\x12\x11\n\ttimestamp\x18\x02 \x01(\x05\x12\x14\n\x0csubject_name\x18\x03 \x01(\t\"w\n\x13\x44\x61rtToPythonMessage\x12\x14\n\x0cmessage_type\x18\x01 \x02(\t\x12#\n\x05start\x18\x02 \x01(\x0b\x32\x14.emg.StartExperiment\x12%\n\x06\x66inish\x18\x03 \x01(\x0b\x32\x15.emg.FinishExperiment')
+  serialized_pb='\n\temg.proto\x12\x03\x65mg\"D\n\x07Reading\x12\x11\n\ttimestamp\x18\x01 \x01(\x01\x12\x11\n\temg_value\x18\x02 \x01(\x05\x12\x13\n\x0b\x66orce_value\x18\x03 \x01(\x05\".\n\x0cReadingChunk\x12\x1e\n\x08readings\x18\x03 \x03(\x0b\x32\x0c.emg.Reading\"G\n\x0bGestureDesc\x12\x14\n\x0cgesture_name\x18\x01 \x01(\t\x12\r\n\x05\x66orce\x18\x02 \x01(\x01\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"\x86\x01\n\x0e\x45xperimentDesc\x12\x17\n\x0f\x65xperiment_name\x18\x01 \x01(\t\x12\x18\n\x10gesture_duration\x18\x02 \x01(\x05\x12\x1d\n\x15time_between_gestures\x18\x03 \x01(\x05\x12\"\n\x08gestures\x18\x04 \x03(\x0b\x32\x10.emg.GestureDesc\"\x90\x01\n\x12\x45xperimentInstance\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12(\n\rReadingChunks\x18\x04 \x03(\x0b\x32\x11.emg.ReadingChunk\"c\n\x0fStartExperiment\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\"Q\n\x10\x46inishExperiment\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\x14\n\x0csave_to_kiji\x18\x03 \x01(\x08\"w\n\x13\x44\x61rtToPythonMessage\x12\x14\n\x0cmessage_type\x18\x01 \x02(\t\x12#\n\x05start\x18\x02 \x01(\x0b\x32\x14.emg.StartExperiment\x12%\n\x06\x66inish\x18\x03 \x01(\x0b\x32\x15.emg.FinishExperiment')
 
 
 
@@ -33,8 +33,15 @@ _READING = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='value', full_name='emg.Reading.value', index=1,
+      name='emg_value', full_name='emg.Reading.emg_value', index=1,
       number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='force_value', full_name='emg.Reading.force_value', index=2,
+      number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -49,7 +56,7 @@ _READING = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=18,
-  serialized_end=61,
+  serialized_end=86,
 )
 
 
@@ -76,8 +83,8 @@ _READINGCHUNK = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=63,
-  serialized_end=109,
+  serialized_start=88,
+  serialized_end=134,
 )
 
 
@@ -118,8 +125,8 @@ _GESTUREDESC = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=111,
-  serialized_end=182,
+  serialized_start=136,
+  serialized_end=207,
 )
 
 
@@ -152,7 +159,7 @@ _EXPERIMENTDESC = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='gesture', full_name='emg.ExperimentDesc.gesture', index=3,
+      name='gestures', full_name='emg.ExperimentDesc.gestures', index=3,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -167,8 +174,8 @@ _EXPERIMENTDESC = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=185,
-  serialized_end=318,
+  serialized_start=210,
+  serialized_end=344,
 )
 
 
@@ -180,16 +187,16 @@ _EXPERIMENTINSTANCE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='subject_name', full_name='emg.ExperimentInstance.subject_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
+      name='timestamp', full_name='emg.ExperimentInstance.timestamp', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='timestamp', full_name='emg.ExperimentInstance.timestamp', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      name='subject_name', full_name='emg.ExperimentInstance.subject_name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -216,8 +223,8 @@ _EXPERIMENTINSTANCE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=321,
-  serialized_end=465,
+  serialized_start=347,
+  serialized_end=491,
 )
 
 
@@ -229,23 +236,23 @@ _STARTEXPERIMENT = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='subject_name', full_name='emg.StartExperiment.subject_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
+      name='timestamp', full_name='emg.StartExperiment.timestamp', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='subject_name', full_name='emg.StartExperiment.subject_name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='experiment', full_name='emg.StartExperiment.experiment', index=1,
-      number=2, type=11, cpp_type=10, label=1,
+      name='experiment', full_name='emg.StartExperiment.experiment', index=2,
+      number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='timestamp', full_name='emg.StartExperiment.timestamp', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -258,8 +265,8 @@ _STARTEXPERIMENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=467,
-  serialized_end=566,
+  serialized_start=493,
+  serialized_end=592,
 )
 
 
@@ -271,23 +278,23 @@ _FINISHEXPERIMENT = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='save_to_kiji', full_name='emg.FinishExperiment.save_to_kiji', index=0,
-      number=1, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='timestamp', full_name='emg.FinishExperiment.timestamp', index=1,
-      number=2, type=5, cpp_type=1, label=1,
+      name='timestamp', full_name='emg.FinishExperiment.timestamp', index=0,
+      number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='subject_name', full_name='emg.FinishExperiment.subject_name', index=2,
-      number=3, type=9, cpp_type=9, label=1,
+      name='subject_name', full_name='emg.FinishExperiment.subject_name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='save_to_kiji', full_name='emg.FinishExperiment.save_to_kiji', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -300,8 +307,8 @@ _FINISHEXPERIMENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=568,
-  serialized_end=649,
+  serialized_start=594,
+  serialized_end=675,
 )
 
 
@@ -342,12 +349,12 @@ _DARTTOPYTHONMESSAGE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=651,
-  serialized_end=770,
+  serialized_start=677,
+  serialized_end=796,
 )
 
 _READINGCHUNK.fields_by_name['readings'].message_type = _READING
-_EXPERIMENTDESC.fields_by_name['gesture'].message_type = _GESTUREDESC
+_EXPERIMENTDESC.fields_by_name['gestures'].message_type = _GESTUREDESC
 _EXPERIMENTINSTANCE.fields_by_name['experiment'].message_type = _EXPERIMENTDESC
 _EXPERIMENTINSTANCE.fields_by_name['ReadingChunks'].message_type = _READINGCHUNK
 _STARTEXPERIMENT.fields_by_name['experiment'].message_type = _EXPERIMENTDESC

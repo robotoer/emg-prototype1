@@ -32,7 +32,7 @@ def record_reading_chunk(record_duration):
       gevent.sleep(0)
 
     reading = chunk.readings.add()
-    (reading.timestamp, reading.value) = signal.get()
+    (reading.timestamp, reading.emg_value) = signal.get()
 
   return chunk
 
@@ -43,12 +43,28 @@ class EmgWebSocket(WebSocket):
     control_msg = emg_pb2.DartToPythonMessage()
     control_msg.ParseFromString(decoded)
     if (control_msg.message_type == "StartExperiment"):
-      inner_msg = msg.start
       #TODO start the experiment
+      inner_msg = control_msg.start
+      experiment_desc = inner_msg.experiment
+      print("experiment starting at %d" % inner_msg.timestamp)
+      print("subject: %s" % inner_msg.subject_name)
+      print("experiment name: %s" % experiment_desc.experiment_name)
+      print("gesture duration: %s" % experiment_desc.gesture_duration)
+      print("time between gestures: %s" % experiment_desc.time_between_gestures)
+      print("list of gestures:")
+      for gesture in experiment_desc.gestures:
+        print("  gesture name: %s" % gesture.gesture_name)
+        print("  force: %s" % gesture.force)
+        print("  description: %s" % gesture.description)
     elif (control_msg.message_type == "FinishExperiment"):
-      inner_msg = msg.finish
       #TODO finish the experiment
+      inner_msg = control_msg.finish
+      print("ending experiment")
+      print("experiment started at %s" % inner_msg.timestamp)
+      print("subject: %s" % inner_msg.subject_name)
+      print("experiment saved to Kiji: %s" % inner_msg.save_to_kiji)
     else:
+      print(str(control_msg))
       #TODO Error
 
   def opened(self):
@@ -98,7 +114,7 @@ def sender():
 
       #Save the head of the queue into the chunk.
       reading = chunk.readings.add()
-      (reading.timestamp, reading.value) = signal.get()
+      (reading.timestamp, reading.emg_value) = signal.get()
 
     for connection in connections:
       # TODO switch to chunk.SerializeToString() when dart/scala can handle that as input.

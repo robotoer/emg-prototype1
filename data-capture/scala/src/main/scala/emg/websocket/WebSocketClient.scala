@@ -9,7 +9,7 @@ class WebSocketClient(settings: HookupClientConfig)
 
   def receive: HookupClient.Receive = {
     case Disconnected(_) => println("Websocket disconnected.")
-    case TextMessage(text) => println(text)
+//    case TextMessage(text) => println(text)
   }
 
   connect() onSuccess {
