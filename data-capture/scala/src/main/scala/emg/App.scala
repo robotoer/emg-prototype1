@@ -15,8 +15,8 @@ object App {
         .build()
     val experimentDesc = Emg.ExperimentDesc.newBuilder()
         .setExperimentName("test experiment name")
-        .setGestureDuration(2)
-        .setTimeBetweenGestures(3)
+        .setGestureDuration(1)
+        .setTimeBetweenGestures(1)
         .addGestures(gesture)
         .build()
     val startMsg = Emg.StartExperiment.newBuilder()
@@ -44,7 +44,6 @@ object App {
 
     val base64FinishMessage = new BASE64Encoder().encode(msg2.toByteArray)
     wsClient.send(base64FinishMessage)
-
     Thread.sleep(10000)
   }
 }

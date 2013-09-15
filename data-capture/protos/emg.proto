@@ -36,7 +36,7 @@ message ExperimentInstance { // Written by Python, read by Scala.
   optional int32 timestamp = 1; // When the experiment began.
   optional string subject_name = 2; // Name of the subject of the experiment.
   optional ExperimentDesc experiment = 3; // Description of the experiment.
-  repeated ReadingChunk ReadingChunks = 4; // Readings corresponding to Gestures in the experiement.
+  repeated ReadingChunk reading_chunks = 4; // Readings corresponding to Gestures in the experiement.
 }
 
 

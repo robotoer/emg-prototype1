@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='emg.proto',
   package='emg',
-  serialized_pb='\n\temg.proto\x12\x03\x65mg\"D\n\x07Reading\x12\x11\n\ttimestamp\x18\x01 \x01(\x01\x12\x11\n\temg_value\x18\x02 \x01(\x05\x12\x13\n\x0b\x66orce_value\x18\x03 \x01(\x05\".\n\x0cReadingChunk\x12\x1e\n\x08readings\x18\x03 \x03(\x0b\x32\x0c.emg.Reading\"G\n\x0bGestureDesc\x12\x14\n\x0cgesture_name\x18\x01 \x01(\t\x12\r\n\x05\x66orce\x18\x02 \x01(\x01\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"\x86\x01\n\x0e\x45xperimentDesc\x12\x17\n\x0f\x65xperiment_name\x18\x01 \x01(\t\x12\x18\n\x10gesture_duration\x18\x02 \x01(\x05\x12\x1d\n\x15time_between_gestures\x18\x03 \x01(\x05\x12\"\n\x08gestures\x18\x04 \x03(\x0b\x32\x10.emg.GestureDesc\"\x90\x01\n\x12\x45xperimentInstance\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12(\n\rReadingChunks\x18\x04 \x03(\x0b\x32\x11.emg.ReadingChunk\"c\n\x0fStartExperiment\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\"Q\n\x10\x46inishExperiment\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\x14\n\x0csave_to_kiji\x18\x03 \x01(\x08\"w\n\x13\x44\x61rtToPythonMessage\x12\x14\n\x0cmessage_type\x18\x01 \x02(\t\x12#\n\x05start\x18\x02 \x01(\x0b\x32\x14.emg.StartExperiment\x12%\n\x06\x66inish\x18\x03 \x01(\x0b\x32\x15.emg.FinishExperiment')
+  serialized_pb='\n\temg.proto\x12\x03\x65mg\"D\n\x07Reading\x12\x11\n\ttimestamp\x18\x01 \x01(\x01\x12\x11\n\temg_value\x18\x02 \x01(\x05\x12\x13\n\x0b\x66orce_value\x18\x03 \x01(\x05\".\n\x0cReadingChunk\x12\x1e\n\x08readings\x18\x03 \x03(\x0b\x32\x0c.emg.Reading\"G\n\x0bGestureDesc\x12\x14\n\x0cgesture_name\x18\x01 \x01(\t\x12\r\n\x05\x66orce\x18\x02 \x01(\x01\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"\x86\x01\n\x0e\x45xperimentDesc\x12\x17\n\x0f\x65xperiment_name\x18\x01 \x01(\t\x12\x18\n\x10gesture_duration\x18\x02 \x01(\x05\x12\x1d\n\x15time_between_gestures\x18\x03 \x01(\x05\x12\"\n\x08gestures\x18\x04 \x03(\x0b\x32\x10.emg.GestureDesc\"\x91\x01\n\x12\x45xperimentInstance\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\x12)\n\x0ereading_chunks\x18\x04 \x03(\x0b\x32\x11.emg.ReadingChunk\"c\n\x0fStartExperiment\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\'\n\nexperiment\x18\x03 \x01(\x0b\x32\x13.emg.ExperimentDesc\"Q\n\x10\x46inishExperiment\x12\x11\n\ttimestamp\x18\x01 \x01(\x05\x12\x14\n\x0csubject_name\x18\x02 \x01(\t\x12\x14\n\x0csave_to_kiji\x18\x03 \x01(\x08\"w\n\x13\x44\x61rtToPythonMessage\x12\x14\n\x0cmessage_type\x18\x01 \x02(\t\x12#\n\x05start\x18\x02 \x01(\x0b\x32\x14.emg.StartExperiment\x12%\n\x06\x66inish\x18\x03 \x01(\x0b\x32\x15.emg.FinishExperiment')
 
 
 
@@ -208,7 +208,7 @@ _EXPERIMENTINSTANCE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='ReadingChunks', full_name='emg.ExperimentInstance.ReadingChunks', index=3,
+      name='reading_chunks', full_name='emg.ExperimentInstance.reading_chunks', index=3,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -224,7 +224,7 @@ _EXPERIMENTINSTANCE = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=347,
-  serialized_end=491,
+  serialized_end=492,
 )
 
 
@@ -265,8 +265,8 @@ _STARTEXPERIMENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=493,
-  serialized_end=592,
+  serialized_start=494,
+  serialized_end=593,
 )
 
 
@@ -307,8 +307,8 @@ _FINISHEXPERIMENT = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=594,
-  serialized_end=675,
+  serialized_start=595,
+  serialized_end=676,
 )
 
 
@@ -349,14 +349,14 @@ _DARTTOPYTHONMESSAGE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=677,
-  serialized_end=796,
+  serialized_start=678,
+  serialized_end=797,
 )
 
 _READINGCHUNK.fields_by_name['readings'].message_type = _READING
 _EXPERIMENTDESC.fields_by_name['gestures'].message_type = _GESTUREDESC
 _EXPERIMENTINSTANCE.fields_by_name['experiment'].message_type = _EXPERIMENTDESC
-_EXPERIMENTINSTANCE.fields_by_name['ReadingChunks'].message_type = _READINGCHUNK
+_EXPERIMENTINSTANCE.fields_by_name['reading_chunks'].message_type = _READINGCHUNK
 _STARTEXPERIMENT.fields_by_name['experiment'].message_type = _EXPERIMENTDESC
 _DARTTOPYTHONMESSAGE.fields_by_name['start'].message_type = _STARTEXPERIMENT
 _DARTTOPYTHONMESSAGE.fields_by_name['finish'].message_type = _FINISHEXPERIMENT

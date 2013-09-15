@@ -13,9 +13,11 @@ import serial
 import time
 import random
 import base64
-
+import logging
 import emg_pb2
 
+# Modify this to set the logging level
+logging.basicConfig(level=logging.DEBUG)
 
 # Buffer containing unsent ADC values.
 signal = Queue()
@@ -37,35 +39,64 @@ def record_reading_chunk(record_duration):
   return chunk
 
 
+def decode_control_msg(encoded):
+  decoded = base64.b64decode(encoded)
+  msg = emg_pb2.DartToPythonMessage()
+  msg.ParseFromString(decoded)
+
+  return msg
+
+
+def fill_exp_instance(start):
+  logging.debug("filling experiment instance")
+  exp_inst = emg_pb2.ExperimentInstance()
+  exp_inst.timestamp = start.timestamp
+  exp_inst.subject_name = start.subject_name
+  exp_inst.experiment.experiment_name = start.experiment.experiment_name
+  exp_inst.experiment.gesture_duration = start.experiment.gesture_duration
+  exp_inst.experiment.time_between_gestures = start.experiment.time_between_gestures
+  for gesture in start.experiment.gestures:
+    g = exp_inst.experiment.gestures.add()
+    g = gesture
+
+  return exp_inst
+
+def run_experiment(start):
+  logging.debug("experiment started")
+  exp_desc = start.experiment
+  chunks = []
+  for gesture in exp_desc.gestures:
+    # Sleep between gestures.
+    logging.debug("sleeping for %s seconds" % exp_desc.time_between_gestures)
+    time.sleep(exp_desc.time_between_gestures)
+    # Collect a chunk
+    logging.debug("recording for %s seconds" % exp_desc.gesture_duration)
+    chunks.append(record_reading_chunk(exp_desc.gesture_duration))
+
+  exp_inst = fill_exp_instance(start)
+  for chunk in chunks:
+    logging.debug("chunk added")
+    c = exp_inst.reading_chunks.add()
+    for reading in chunk.readings:
+      r = c.readings.add()
+      (r.timestamp, r.emg_value, r.force_value) = (reading.timestamp, reading.emg_value, reading.force_value)
+
+  return exp_inst
+
+
 class EmgWebSocket(WebSocket):
   def received_message(self, message):
-    decoded = base64.b64decode(message.data)
-    control_msg = emg_pb2.DartToPythonMessage()
-    control_msg.ParseFromString(decoded)
+    control_msg = decode_control_msg(message.data)
+    logging.debug(control_msg)
+
     if (control_msg.message_type == "StartExperiment"):
-      #TODO start the experiment
-      inner_msg = control_msg.start
-      experiment_desc = inner_msg.experiment
-      print("experiment starting at %d" % inner_msg.timestamp)
-      print("subject: %s" % inner_msg.subject_name)
-      print("experiment name: %s" % experiment_desc.experiment_name)
-      print("gesture duration: %s" % experiment_desc.gesture_duration)
-      print("time between gestures: %s" % experiment_desc.time_between_gestures)
-      print("list of gestures:")
-      for gesture in experiment_desc.gestures:
-        print("  gesture name: %s" % gesture.gesture_name)
-        print("  force: %s" % gesture.force)
-        print("  description: %s" % gesture.description)
+      start = control_msg.start
+      exp_inst = run_experiment(start)
+      logging.debug(exp_inst)
+      #TODO put the experiment instance somewhere that we can reference and finish it when ready
     elif (control_msg.message_type == "FinishExperiment"):
+      finish = control_msg.finish
       #TODO finish the experiment
-      inner_msg = control_msg.finish
-      print("ending experiment")
-      print("experiment started at %s" % inner_msg.timestamp)
-      print("subject: %s" % inner_msg.subject_name)
-      print("experiment saved to Kiji: %s" % inner_msg.save_to_kiji)
-    else:
-      print(str(control_msg))
-      #TODO Error
 
   def opened(self):
     # Register this connection.
@@ -73,8 +104,8 @@ class EmgWebSocket(WebSocket):
     print('Websocket %r opened!' % self)
 
   def closed(self, code, reason=None):
-    if self in connections:
-      connections.remove(self)
+    # Remove this connection from connections, if it is not present, will explode.
+    connections.remove(self)
     print('Websocket %r closed!' % self)
 
 
@@ -126,6 +157,6 @@ def sender():
 if __name__ == '__main__':
   gevent.joinall([
       gevent.spawn(server, EmgWebSocket),
-      gevent.spawn(serial_receiver),
-      gevent.spawn(sender)
+      gevent.spawn(serial_receiver)
+     # gevent.spawn(sender)
   ])
